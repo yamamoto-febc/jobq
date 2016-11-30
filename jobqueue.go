@@ -63,6 +63,9 @@ func (d *JobQueue) StartDispatch() error {
 	// API呼び出し 登録
 	d.dispatchJobs()
 
+	// 初期化リクエスト登録
+	d.queue.PushRequest("init", nil)
+
 	// 終了待機
 	err := <-d.queue.Quit
 	return err
@@ -129,6 +132,7 @@ func (d *JobQueue) AddDefaultActionWorker(workerName string, queueSize int) {
 	d.AddWorker(workerName, queueSize, func(q chan JobAPI) {
 		job := <-q
 		go job.Start(d.queue, d.option)
+
 	})
 }
 
@@ -138,8 +142,8 @@ func (d *JobQueue) AddSerializedActionWorker(workerName string) {
 
 func (d *JobQueue) AddSerializedWithIntervalActionWorker(workerName string, interval time.Duration) {
 	d.AddWorker(workerName, 1, func(q chan JobAPI) {
-		time.Sleep(interval)
 		job := <-q
+		time.Sleep(interval)
 		go job.Start(d.queue, d.option)
 
 	})
