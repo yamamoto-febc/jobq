@@ -15,8 +15,8 @@ type JobQueue struct {
 	jobRoutingTable map[string]JobRouterFunc
 }
 
-// NewDispatcher Dispatcherの新規作成
-func NewDispatcher(option *Option, routingTable map[string]JobRouterFunc) *JobQueue {
+// NewJobQueue Dispatcherの新規作成
+func NewJobQueue(option *Option, routingTable map[string]JobRouterFunc) *JobQueue {
 	return &JobQueue{
 		option:          option,
 		queue:           NewQueue(option.RequestQueueSize),
